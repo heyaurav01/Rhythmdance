@@ -93,8 +93,8 @@ export default function Navbar({ onSearch }: NavbarProps) {
     }
   };
 
-  const isLessonsActive =
-    pathname.startsWith("/dashboard") || pathname.startsWith("/dance") || pathname.startsWith("/learning");
+  const isHomeActive = pathname === "/dashboard" || pathname === "/";
+  const isLessonsActive = pathname.startsWith("/learning") || pathname.startsWith("/dance");
   const isPricingActive = pathname.startsWith("/pricing");
   const isCertificateActive = pathname.startsWith("/certificate");
 
@@ -145,7 +145,9 @@ export default function Navbar({ onSearch }: NavbarProps) {
         <nav className="hidden md:flex items-center gap-8 text-xs font-bold tracking-wide text-[#252525]">
           <Link
             href="/dashboard"
-            className={`relative py-1 transition-colors hover:text-[#111111] flex flex-col items-center text-[#777777]`}
+            className={`relative py-1 transition-colors hover:text-[#111111] flex flex-col items-center ${
+              isHomeActive ? "text-[#111111]" : "text-[#777777]"
+            }`}
           >
             <span>Home</span>
           </Link>
