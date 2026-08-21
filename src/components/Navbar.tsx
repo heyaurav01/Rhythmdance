@@ -193,7 +193,7 @@ export default function Navbar({ onSearch }: NavbarProps) {
 
           {/* Bell Icon */}
           <button
-            onClick={() => router.push("/pricing")}
+            onClick={() => router.push("/notifications")}
             className="p-2 text-[#252525] hover:text-[#B42318] rounded-full hover:bg-[#EFE7DA] transition-colors relative"
             aria-label="Notifications"
           >
