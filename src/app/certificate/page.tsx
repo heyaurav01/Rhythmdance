@@ -1,10 +1,10 @@
 "use client";
 
-import { Suspense, useRef } from "react";
+import { Suspense, useRef, useMemo, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import Navbar from "@/components/Navbar";
-import { Download, ArrowLeft, Award, Sparkles, CheckCircle2 } from "lucide-react";
+import { Download, ArrowLeft, Award, CheckCircle2, Loader2 } from "lucide-react";
 import { motion } from "framer-motion";
 
 function CertificateContent() {
@@ -12,6 +12,7 @@ function CertificateContent() {
   const router = useRouter();
   const { user } = useAuth();
   const certRef = useRef<HTMLDivElement>(null);
+  const [downloading, setDownloading] = useState(false);
 
   const danceName = searchParams.get("dance") || "Odissi";
   const userName = user?.isAnonymous
@@ -23,7 +24,38 @@ function CertificateContent() {
     year: "numeric",
   });
 
-  const certId = `ROI-SIH26-${danceName.toUpperCase().slice(0, 3)}-${Math.floor(1000 + Math.random() * 9000)}`;
+  // Generate certId once per mount to avoid impure render calls
+  const certId = useMemo(
+    () =>
+      `ROI-SIH26-${danceName.toUpperCase().slice(0, 3)}-${Math.floor(1000 + Math.random() * 9000)}`,
+    [danceName]
+  );
+
+  const handleDownloadPDF = async () => {
+    if (!certRef.current) return;
+    setDownloading(true);
+
+    try {
+      // Dynamically import html2pdf in the browser
+      const html2pdf = (await import("html2pdf.js")).default;
+      
+      const opt = {
+        margin:       0,
+        filename:     `Rhythm_of_India_Certificate_${danceName}.pdf`,
+        image:        { type: 'jpeg', quality: 1 },
+        html2canvas:  { scale: 2, useCORS: true },
+        jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+      };
+
+      await html2pdf().set(opt).from(certRef.current).save();
+    } catch (err) {
+      console.error("PDF generation failed:", err);
+      // Fallback to print
+      window.print();
+    } finally {
+      setDownloading(false);
+    }
+  };
 
   return (
     <main className="pt-28 pb-20 px-4 sm:px-6 max-w-4xl mx-auto space-y-8">
@@ -147,11 +179,21 @@ function CertificateContent() {
         </button>
 
         <button
-          onClick={() => window.print()}
-          className="inline-flex items-center gap-2 px-8 py-3.5 bg-[#B42318] hover:bg-[#C92A1E] text-white font-black uppercase tracking-wider text-xs rounded-full transition-all duration-300 hover:scale-105 active:scale-95 shadow-xl shadow-[#B42318]/30 cursor-pointer"
+          onClick={handleDownloadPDF}
+          disabled={downloading}
+          className="inline-flex items-center gap-2 px-8 py-3.5 bg-[#B42318] hover:bg-[#C92A1E] text-white font-black uppercase tracking-wider text-xs rounded-full transition-all duration-300 hover:scale-105 active:scale-95 shadow-xl shadow-[#B42318]/30 cursor-pointer disabled:opacity-60 disabled:cursor-wait disabled:hover:scale-100"
         >
-          <Download size={16} />
-          <span>Download Official PDF</span>
+          {downloading ? (
+            <>
+              <Loader2 size={16} className="animate-spin" />
+              <span>Generating PDF...</span>
+            </>
+          ) : (
+            <>
+              <Download size={16} />
+              <span>Download Official PDF</span>
+            </>
+          )}
         </button>
       </motion.div>
     </main>

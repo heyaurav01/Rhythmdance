@@ -84,10 +84,9 @@ export default function DashboardPage() {
 
     const matchesRegion =
       selectedRegion === "all" ||
-      (selectedRegion === "east" && d.slug === "odissi") ||
-      (selectedRegion === "south" &&
-        (d.slug === "bharatanatyam" || d.slug === "kuchipudi")) ||
-      (selectedRegion === "north" && d.slug === "kathak");
+      (selectedRegion === "east" && (d.region.toLowerCase().includes("east") || d.region.toLowerCase().includes("odisha") || d.region.toLowerCase().includes("manipur") || d.region.toLowerCase().includes("assam"))) ||
+      (selectedRegion === "south" && (d.region.toLowerCase().includes("south") || d.region.toLowerCase().includes("tamil nadu") || d.region.toLowerCase().includes("andhra pradesh") || d.region.toLowerCase().includes("kerala"))) ||
+      (selectedRegion === "north" && (d.region.toLowerCase().includes("north") && !d.region.toLowerCase().includes("northeast")));
 
     return matchesSearch && matchesRegion;
   });
@@ -125,7 +124,7 @@ export default function DashboardPage() {
             {/* Quick Action Pills & Stats */}
             <div className="flex flex-wrap lg:flex-col items-start lg:items-end gap-3">
               <Link
-                href="#dance-forms"
+                href="#classical-forms"
                 className="inline-flex items-center gap-2 bg-[#B42318] hover:bg-[#C92A1E] text-white px-6 py-3 rounded-full text-xs sm:text-sm font-bold transition-all duration-300 hover:scale-105 active:scale-95 shadow-lg shadow-[#B42318]/20 cursor-pointer"
               >
                 <span>Explore Dance Forms</span>
@@ -283,9 +282,9 @@ export default function DashboardPage() {
             <div className="flex items-center gap-1.5 bg-[#EFE7DA] border border-[#E8DEC8] p-1 rounded-full text-xs font-bold">
               {[
                 { id: "all", label: "All Traditions" },
-                { id: "east", label: "East (Odissi)" },
+                { id: "east", label: "East & NE" },
                 { id: "south", label: "South" },
-                { id: "north", label: "North (Kathak)" },
+                { id: "north", label: "North" },
               ].map((tab) => (
                 <button
                   key={tab.id}
@@ -392,9 +391,9 @@ export default function DashboardPage() {
             <p>SIH 2026 Prototype</p>
           </div>
           
-          {/* Subtle watermark background */}
-          <div className="absolute right-[-10%] bottom-[-20%] text-[200px] font-black font-mono text-white/5 tracking-tighter pointer-events-none select-none z-0">
-            INDIA
+          {/* Huge watermark background */}
+          <div className="absolute left-1/2 -translate-x-1/2 bottom-[-10%] text-[18vw] leading-none font-black font-sans text-white/[0.03] tracking-tighter pointer-events-none select-none z-0 whitespace-nowrap">
+            rhythmofindia
           </div>
         </footer>
       </main>

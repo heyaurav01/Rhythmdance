@@ -153,7 +153,7 @@ export const danceStyles: DanceStyle[] = [
     lessons: [
       {
         title: "Introduction",
-        video: "https://www.youtube.com/embed/XXXXXXX",
+        video: "https://www.youtube.com/embed/hsfg1FLnPsE",
         description:
           "Bharatanatyam is a sacred art form from Tamil Nadu, celebrated for its intricate movements and profound expressions.",
         points: [
@@ -257,7 +257,7 @@ export const danceStyles: DanceStyle[] = [
     lessons: [
       {
         title: "Introduction",
-        video: "https://www.youtube.com/embed/XXXXXXX",
+        video: "https://www.youtube.com/embed/GIh2obii5hs",
         description:
           "Kathak is a classical dance form of North India known for its swift spins and rhythmic footwork, originally performed by traveling storytellers.",
         points: [
@@ -367,7 +367,7 @@ export const danceStyles: DanceStyle[] = [
     lessons: [
       {
         title: "Introduction",
-        video: "https://www.youtube.com/embed/XXXXXXX",
+        video: "https://www.youtube.com/embed/xkDz72Lzwzg",
         description:
           "Kuchipudi is a classical dance from Andhra Pradesh known for its dramatic storytelling, dynamic movements, and unique tradition of dancing on a brass plate.",
         points: [
@@ -462,6 +462,54 @@ export const danceStyles: DanceStyle[] = [
           "Moksham is the graceful conclusion of the recital symbolizing spiritual liberation and devotion.",
       },
     ],
+  },
+  {
+    slug: "kathakali",
+    name: "Kathakali",
+    region: "Kerala (South India)",
+    tagline: "Elaborate makeup, storytelling, and martial arts elements.",
+    image: "/images/kuchipudi.jpg",
+    accentColor: "#B42318",
+    editorialTag: "KERALA · SOUTH INDIA",
+    category: "classical",
+    comingSoon: true,
+    lessons: [],
+  },
+  {
+    slug: "manipuri",
+    name: "Manipuri",
+    region: "Manipur (Northeast India)",
+    tagline: "Graceful movements celebrating divine love.",
+    image: "/images/kuchipudi.jpg",
+    accentColor: "#B42318",
+    editorialTag: "MANIPUR · NORTHEAST INDIA",
+    category: "classical",
+    comingSoon: true,
+    lessons: [],
+  },
+  {
+    slug: "mohiniyattam",
+    name: "Mohiniyattam",
+    region: "Kerala (South India)",
+    tagline: "The dance of the enchantress with flowing grace.",
+    image: "/images/kuchipudi.jpg",
+    accentColor: "#B42318",
+    editorialTag: "KERALA · SOUTH INDIA",
+    category: "classical",
+    comingSoon: true,
+    lessons: [],
+  },
+  {
+    slug: "sattriya",
+    name: "Sattriya",
+    region: "Assam (Northeast India)",
+    tagline: "Devotional dance from the monasteries of Assam.",
+    image: "/images/kuchipudi.jpg",
+    accentColor: "#B42318",
+    editorialTag: "ASSAM · NORTHEAST INDIA",
+    category: "classical",
+    comingSoon: true,
+    lessons: [],
   },
   {
     slug: "garba",

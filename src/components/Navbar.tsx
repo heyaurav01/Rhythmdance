@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
@@ -17,11 +17,23 @@ import {
   Menu,
   X,
   Sparkles,
+  Settings,
 } from "lucide-react";
 
 interface NavbarProps {
   onSearch?: (query: string) => void;
 }
+
+const languageLabels: Record<string, string> = {
+  EN: "English",
+  ES: "Español",
+  FR: "Français",
+  RU: "Русский",
+  DE: "Deutsch",
+  IT: "Italiano",
+  PT: "Português",
+  HI: "हिन्दी",
+};
 
 export default function Navbar({ onSearch }: NavbarProps) {
   const { user, logout } = useAuth();
@@ -31,13 +43,14 @@ export default function Navbar({ onSearch }: NavbarProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [profileOpen, setProfileOpen] = useState(false);
   const [langCurrencyOpen, setLangCurrencyOpen] = useState(false);
-  const [currency, setCurrency] = useState("USD");
+  const [currency, setCurrency] = useState("INR");
   const [language, setLanguage] = useState("EN");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const profileRef = useRef<HTMLDivElement>(null);
   const langRef = useRef<HTMLDivElement>(null);
 
+  // Close dropdowns on outside click or Escape key
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (
@@ -53,15 +66,25 @@ export default function Navbar({ onSearch }: NavbarProps) {
         setLangCurrencyOpen(false);
       }
     }
+    function handleEscape(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        setProfileOpen(false);
+        setLangCurrencyOpen(false);
+      }
+    }
     document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    document.addEventListener("keydown", handleEscape);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleEscape);
+    };
   }, []);
 
-  const handleLogout = async () => {
+  const handleLogout = useCallback(async () => {
     setProfileOpen(false);
     await logout();
     router.push("/");
-  };
+  }, [logout, router]);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
@@ -71,17 +94,20 @@ export default function Navbar({ onSearch }: NavbarProps) {
   };
 
   const isLessonsActive =
-    pathname.startsWith("/dashboard") || pathname.startsWith("/dance");
+    pathname.startsWith("/dashboard") || pathname.startsWith("/dance") || pathname.startsWith("/learning");
   const isPricingActive = pathname.startsWith("/pricing");
   const isCertificateActive = pathname.startsWith("/certificate");
 
+  // Derive display name and initial from authenticated user
   const userName = user?.isAnonymous
     ? "Guest Explorer"
     : user?.email?.split("@")[0] || "Dancer";
 
+  const userInitial = userName.trim().charAt(0).toUpperCase() || "U";
+
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-[#F8F1E6]/95 backdrop-blur-md border-b border-[#E8DEC8] transition-all duration-300">
-      <div className="max-w-7xl mx-auto flex items-center justify-between px-4 sm:px-8 py-3.5">
+      <div className="max-w-7xl mx-auto flex items-center justify-between px-4 sm:px-8 py-2.5">
         {/* Left: Logo & Search */}
         <div className="flex items-center gap-4 lg:gap-6">
           <Link
@@ -101,7 +127,7 @@ export default function Navbar({ onSearch }: NavbarProps) {
             </div>
           </Link>
 
-          {/* Search Pill - Inspired by Art Course reference */}
+          {/* Search Field */}
           <div className="hidden md:flex items-center bg-[#EFE7DA] border border-[#E8DEC8] rounded-full px-3.5 py-1.5 w-48 lg:w-64 focus-within:w-72 focus-within:border-[#B42318] focus-within:bg-white transition-all duration-300">
             <Search size={14} className="text-[#777777] mr-2 flex-shrink-0" />
             <input
@@ -109,30 +135,31 @@ export default function Navbar({ onSearch }: NavbarProps) {
               placeholder="Search dance, lessons..."
               value={searchQuery}
               onChange={handleSearchChange}
+              aria-label="Search courses and lessons"
               className="bg-transparent text-xs text-[#111111] placeholder-[#777777] outline-none w-full font-medium"
             />
           </div>
         </div>
 
-        {/* Center: Navigation Links with Red dot indicator */}
+        {/* Center: Navigation Links */}
         <nav className="hidden md:flex items-center gap-8 text-xs font-bold tracking-wide text-[#252525]">
           <Link
-            href="/dashboard"
+            href="/learning"
             className={`relative py-1 transition-colors hover:text-[#111111] flex flex-col items-center ${
               isLessonsActive ? "text-[#111111]" : "text-[#777777]"
             }`}
           >
-            <span>My Lessons</span>
+            <span>My Learning</span>
             {isLessonsActive && (
               <span className="absolute -bottom-1 w-1.5 h-1.5 bg-[#B42318] rounded-full" />
             )}
           </Link>
 
           <Link
-            href="/dashboard#dance-forms"
+            href="/dashboard#classical-forms"
             className="relative py-1 transition-colors hover:text-[#111111] text-[#777777] flex flex-col items-center"
           >
-            <span>Browse</span>
+            <span>Classical Dances</span>
           </Link>
 
           <Link
@@ -161,77 +188,14 @@ export default function Navbar({ onSearch }: NavbarProps) {
         </nav>
 
         {/* Right: Currency/Language, Notifications, Profile */}
-        <div className="flex items-center gap-3 sm:gap-4">
-          {/* Currency & Language Popover */}
-          <div className="relative" ref={langRef}>
-            <button
-              onClick={() => setLangCurrencyOpen(!langCurrencyOpen)}
-              className="flex items-center gap-1.5 bg-[#EFE7DA] hover:bg-[#E8DEC8] border border-[#E8DEC8] px-2.5 py-1.5 rounded-full text-xs font-bold text-[#111111] transition-colors cursor-pointer"
-            >
-              <Globe size={13} className="text-[#B42318]" />
-              <span>{currency}</span>
-              <span className="text-[#777777]">·</span>
-              <span>{language}</span>
-              <ChevronDown size={12} className="text-[#777777]" />
-            </button>
+        <div className="flex items-center gap-2.5 sm:gap-3">
 
-            {langCurrencyOpen && (
-              <div className="absolute right-0 mt-2 w-48 bg-white border border-[#E8DEC8] rounded-2xl shadow-xl p-3 z-50 animate-fade-slide-up text-xs">
-                <div className="mb-2">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-[#777777] block mb-1.5">
-                    Currency
-                  </span>
-                  <div className="grid grid-cols-3 gap-1">
-                    {["USD", "INR", "EUR", "GBP"].map((c) => (
-                      <button
-                        key={c}
-                        onClick={() => {
-                          setCurrency(c);
-                          setLangCurrencyOpen(false);
-                        }}
-                        className={`py-1 rounded-lg font-bold text-center transition-all ${
-                          currency === c
-                            ? "bg-[#B42318] text-white"
-                            : "bg-[#F8F1E6] text-[#252525] hover:bg-[#EFE7DA]"
-                        }`}
-                      >
-                        {c}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-                <div className="pt-2 border-t border-[#E8DEC8]">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-[#777777] block mb-1.5">
-                    Language
-                  </span>
-                  <div className="grid grid-cols-3 gap-1">
-                    {["EN", "ES", "FR", "RU", "HI"].map((l) => (
-                      <button
-                        key={l}
-                        onClick={() => {
-                          setLanguage(l);
-                          setLangCurrencyOpen(false);
-                        }}
-                        className={`py-1 rounded-lg font-bold text-center transition-all ${
-                          language === l
-                            ? "bg-[#111111] text-white"
-                            : "bg-[#F8F1E6] text-[#252525] hover:bg-[#EFE7DA]"
-                        }`}
-                      >
-                        {l}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
 
           {/* Bell Icon */}
           <button
             onClick={() => router.push("/pricing")}
             className="p-2 text-[#252525] hover:text-[#B42318] rounded-full hover:bg-[#EFE7DA] transition-colors relative"
-            title="Premium Updates"
+            aria-label="Notifications"
           >
             <Bell size={16} />
             <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-[#B42318] rounded-full animate-pulse" />
@@ -242,65 +206,92 @@ export default function Navbar({ onSearch }: NavbarProps) {
             <div className="relative" ref={profileRef}>
               <button
                 onClick={() => setProfileOpen(!profileOpen)}
-                className="flex items-center gap-2 bg-[#111111] text-[#F8F1E6] pl-2 pr-2.5 py-1 rounded-full text-xs font-bold hover:bg-[#252525] transition-all cursor-pointer shadow-sm"
+                aria-label="User profile"
+                aria-expanded={profileOpen}
+                className="flex items-center gap-1.5 cursor-pointer group"
               >
-                <div className="w-5 h-5 rounded-full bg-[#B42318] text-white flex items-center justify-center text-[10px] font-black uppercase">
-                  {userName.charAt(0)}
+                {/* Large circular avatar — 44px desktop, 40px mobile */}
+                <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-[#111111] text-white flex items-center justify-center text-base sm:text-lg font-black uppercase ring-2 ring-transparent group-hover:ring-[#B42318] transition-all shadow-md">
+                  {userInitial}
                 </div>
-                <span className="hidden sm:inline max-w-[90px] truncate">
-                  {userName}
-                </span>
-                <ChevronDown size={12} className="text-[#E8DEC8]" />
+                <ChevronDown size={14} className="text-[#777777] group-hover:text-[#111111] transition-colors hidden sm:block" />
               </button>
 
               {/* Profile Dropdown */}
               {profileOpen && (
-                <div className="absolute right-0 mt-2 w-56 bg-white border border-[#E8DEC8] rounded-2xl shadow-xl p-2 z-50 animate-fade-slide-up">
-                  <div className="p-3 bg-[#F8F1E6] rounded-xl mb-1">
-                    <p className="text-xs font-black text-[#111111] truncate">
-                      {userName}
-                    </p>
-                    <p className="text-[10px] text-[#777777] truncate">
-                      {user.email || "guest@rhythmofindia.org"}
-                    </p>
-                    <div className="mt-2 inline-flex items-center gap-1 bg-[#B42318]/10 text-[#B42318] px-2 py-0.5 rounded-md text-[10px] font-bold">
+                <div className="absolute right-0 mt-2.5 w-60 bg-white border border-[#E8DEC8] rounded-2xl shadow-2xl p-2 z-50 animate-fade-slide-up">
+                  {/* User identity card */}
+                  <div className="p-3.5 bg-[#F8F1E6] rounded-xl mb-1.5">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-full bg-[#111111] text-white flex items-center justify-center text-base font-black uppercase flex-shrink-0">
+                        {userInitial}
+                      </div>
+                      <div className="min-w-0">
+                        <p className="text-sm font-black text-[#111111] truncate capitalize">
+                          {userName}
+                        </p>
+                        <p className="text-[10px] text-[#777777] truncate">
+                          {user.email || "guest@rhythmofindia.org"}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="mt-2.5 inline-flex items-center gap-1 bg-[#B42318]/10 text-[#B42318] px-2 py-0.5 rounded-md text-[10px] font-bold">
                       <Sparkles size={10} />
                       Classical Scholar
                     </div>
                   </div>
 
+                  {/* Menu Items */}
                   <Link
-                    href="/dashboard"
+                    href="/profile"
                     onClick={() => setProfileOpen(false)}
-                    className="flex items-center gap-2.5 px-3 py-2 text-xs font-semibold text-[#252525] hover:bg-[#F8F1E6] rounded-lg transition-colors"
+                    className="flex items-center gap-2.5 px-3 py-2.5 text-xs font-semibold text-[#252525] hover:bg-[#F8F1E6] rounded-lg transition-colors"
+                  >
+                    <UserIcon size={14} className="text-[#B42318]" />
+                    My Profile
+                  </Link>
+
+                  <Link
+                    href="/learning"
+                    onClick={() => setProfileOpen(false)}
+                    className="flex items-center gap-2.5 px-3 py-2.5 text-xs font-semibold text-[#252525] hover:bg-[#F8F1E6] rounded-lg transition-colors"
                   >
                     <BookOpen size={14} className="text-[#B42318]" />
                     My Learning
                   </Link>
 
                   <Link
-                    href="/pricing"
-                    onClick={() => setProfileOpen(false)}
-                    className="flex items-center gap-2.5 px-3 py-2 text-xs font-semibold text-[#252525] hover:bg-[#F8F1E6] rounded-lg transition-colors"
-                  >
-                    <CreditCard size={14} className="text-[#B42318]" />
-                    Membership & Passes
-                  </Link>
-
-                  <Link
                     href="/certificate"
                     onClick={() => setProfileOpen(false)}
-                    className="flex items-center gap-2.5 px-3 py-2 text-xs font-semibold text-[#252525] hover:bg-[#F8F1E6] rounded-lg transition-colors"
+                    className="flex items-center gap-2.5 px-3 py-2.5 text-xs font-semibold text-[#252525] hover:bg-[#F8F1E6] rounded-lg transition-colors"
                   >
                     <Award size={14} className="text-[#B42318]" />
                     Certificates
                   </Link>
 
-                  <div className="my-1 border-t border-[#E8DEC8]" />
+                  <Link
+                    href="/pricing"
+                    onClick={() => setProfileOpen(false)}
+                    className="flex items-center gap-2.5 px-3 py-2.5 text-xs font-semibold text-[#252525] hover:bg-[#F8F1E6] rounded-lg transition-colors"
+                  >
+                    <CreditCard size={14} className="text-[#B42318]" />
+                    Subscription
+                  </Link>
+
+                  <Link
+                    href="/settings"
+                    onClick={() => setProfileOpen(false)}
+                    className="w-full flex items-center gap-2.5 px-3 py-2.5 text-xs font-semibold text-[#252525] hover:bg-[#F8F1E6] rounded-lg transition-colors cursor-pointer"
+                  >
+                    <Settings size={14} className="text-[#B42318]" />
+                    Settings
+                  </Link>
+
+                  <div className="my-1.5 border-t border-[#E8DEC8]" />
 
                   <button
                     onClick={handleLogout}
-                    className="w-full flex items-center gap-2.5 px-3 py-2 text-xs font-semibold text-[#B42318] hover:bg-[#FDF2F2] rounded-lg transition-colors cursor-pointer"
+                    className="w-full flex items-center gap-2.5 px-3 py-2.5 text-xs font-semibold text-[#B42318] hover:bg-[#FDF2F2] rounded-lg transition-colors cursor-pointer"
                   >
                     <LogOut size={14} />
                     Sign Out
@@ -321,6 +312,7 @@ export default function Navbar({ onSearch }: NavbarProps) {
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="md:hidden p-1.5 text-[#111111] hover:bg-[#EFE7DA] rounded-lg transition-colors"
+            aria-label="Toggle menu"
           >
             {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
@@ -334,20 +326,29 @@ export default function Navbar({ onSearch }: NavbarProps) {
             <Search size={14} className="text-[#777777] mr-2" />
             <input
               type="text"
-              placeholder="Search dance forms..."
+              placeholder="Search dance, lessons..."
               value={searchQuery}
               onChange={handleSearchChange}
+              aria-label="Search courses and lessons"
               className="bg-transparent text-xs text-[#111111] placeholder-[#777777] outline-none w-full font-medium"
             />
           </div>
 
+          {/* Mobile navigation + language/currency */}
           <div className="grid grid-cols-2 gap-2 pt-2 text-xs font-bold">
             <Link
-              href="/dashboard"
+              href="/learning"
               onClick={() => setMobileMenuOpen(false)}
               className="p-3 bg-white rounded-xl text-center border border-[#E8DEC8]"
             >
               My Lessons
+            </Link>
+            <Link
+              href="/dashboard#classical-forms"
+              onClick={() => setMobileMenuOpen(false)}
+              className="p-3 bg-white rounded-xl text-center border border-[#E8DEC8]"
+            >
+              Classical Dances
             </Link>
             <Link
               href="/pricing"
@@ -363,15 +364,18 @@ export default function Navbar({ onSearch }: NavbarProps) {
             >
               Certificates
             </Link>
-            {user && (
-              <button
-                onClick={handleLogout}
-                className="p-3 bg-[#FDF2F2] text-[#B42318] rounded-xl text-center border border-red-200"
-              >
-                Logout
-              </button>
-            )}
           </div>
+
+
+
+          {user && (
+            <button
+              onClick={handleLogout}
+              className="w-full p-3 bg-[#FDF2F2] text-[#B42318] rounded-xl text-center border border-red-200 text-xs font-bold"
+            >
+              Logout
+            </button>
+          )}
         </div>
       )}
     </header>
