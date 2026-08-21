@@ -448,7 +448,7 @@ export default function DashboardPage() {
           </div>
 
           {/* Watermark - increased size slightly and placed absolute behind */}
-          <div className="absolute left-1/2 -translate-x-1/2 bottom-20 text-[20vw] leading-none font-black font-sans text-white/[0.03] tracking-tighter pointer-events-none select-none z-0 whitespace-nowrap overflow-hidden">
+          <div className="absolute left-1/2 -translate-x-1/2 bottom-8 text-[26vw] leading-none font-black font-sans text-white/[0.03] tracking-tighter pointer-events-none select-none z-0 whitespace-nowrap overflow-hidden">
             rhythmofindia
           </div>
 

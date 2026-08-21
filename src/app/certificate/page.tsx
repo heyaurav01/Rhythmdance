@@ -41,7 +41,7 @@ function CertificateContent() {
       
       const opt = {
         margin:       0,
-        filename:     `Rhythm_of_India_Certificate_${danceName}.pdf`,
+        filename:     `RHYTHM-OF-INDIA-Certificate.pdf`,
         image:        { type: 'jpeg', quality: 1 },
         html2canvas:  { scale: 2, useCORS: true },
         jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
@@ -191,7 +191,7 @@ function CertificateContent() {
           ) : (
             <>
               <Download size={16} />
-              <span>Download Official PDF</span>
+              <span>Download Certificate</span>
             </>
           )}
         </button>
