@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Rhythm of India – Learn Classical Indian Dance",
+  title: "RHYTHM OF INDIA",
   description:
     "Discover and learn classical Indian dance forms – Odissi, Bharatanatyam, Kathak, and Kuchipudi – through structured video lessons and interactive learning.",
 };
