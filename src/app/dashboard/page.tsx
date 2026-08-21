@@ -95,64 +95,81 @@ export default function DashboardPage() {
     <div className="min-h-screen bg-[#F8F1E6] text-[#111111] selection:bg-[#B42318] selection:text-white">
       <Navbar onSearch={setSearchQuery} />
 
-      <main className="pt-24 pb-20 px-4 sm:px-8 max-w-7xl mx-auto space-y-12">
-        {/* ── 1. Editorial Hero Header ── */}
-        <section className="relative pt-12 sm:pt-16 pb-12 sm:pb-16 border-b border-[#E8DEC8] rounded-3xl overflow-hidden mb-12 shadow-sm">
-          {/* Background Video iframe */}
-          <div className="absolute inset-0 w-full h-full z-0 overflow-hidden bg-[#111111] pointer-events-none rounded-3xl">
-            <iframe
-              src="https://www.youtube.com/embed/UBYqv21c0Yk?autoplay=1&mute=1&loop=1&playlist=UBYqv21c0Yk&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1"
-              allow="autoplay; encrypted-media"
-              className="absolute top-1/2 left-1/2 w-[150vw] h-[150vh] -translate-x-1/2 -translate-y-1/2 opacity-20 object-cover"
-              style={{ minWidth: '100%', minHeight: '100%' }}
-            />
-            {/* Gradient overlay for text readability */}
-            <div className="absolute inset-0 bg-gradient-to-r from-[#F8F1E6] via-[#F8F1E6]/90 to-transparent" />
+      {/* ── 1. True Fullscreen Video Hero ── */}
+      <section className="relative w-full h-screen overflow-hidden">
+        {/* YouTube iframe stretched to cover full screen - no controls, no player UI */}
+        <div className="absolute inset-0 w-full h-full pointer-events-none bg-black">
+          <iframe
+            src="https://www.youtube.com/embed/UBYqv21c0Yk?autoplay=1&mute=1&loop=1&playlist=UBYqv21c0Yk&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1&iv_load_policy=3&disablekb=1"
+            allow="autoplay; encrypted-media; fullscreen"
+            allowFullScreen
+            className="absolute"
+            style={{
+              top: '50%',
+              left: '50%',
+              width: '177.78vh', /* 16:9 aspect ratio */
+              height: '56.25vw', /* 16:9 aspect ratio */
+              minWidth: '100%',
+              minHeight: '100%',
+              transform: 'translate(-50%, -50%)',
+              border: 'none',
+              opacity: 0.75,
+            }}
+          />
+        </div>
+
+        {/* Dark gradient overlay for readability */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/80 z-10" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-transparent to-black/30 z-10" />
+
+        {/* Hero Content — centered on screen */}
+        <div className="relative z-20 flex flex-col items-start justify-center h-full px-8 sm:px-16 lg:px-24 max-w-7xl mx-auto">
+          {/* Micro badge */}
+          <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full px-4 py-1.5 text-xs font-bold text-white mb-8">
+            <span className="w-2 h-2 rounded-full bg-[#B42318] animate-pulse" />
+            <span>CLASSICAL INDIAN DANCE ACADEMY</span>
+            <span className="text-white/50">·</span>
+            <span className="text-[#B42318] uppercase">SIH 2026</span>
           </div>
 
-          <div className="relative z-10 flex flex-col lg:flex-row lg:items-end justify-between gap-8 px-6 sm:px-10">
-            <div className="max-w-3xl">
-              {/* Micro badge */}
-              <div className="inline-flex items-center gap-2 bg-white/80 backdrop-blur-sm border border-[#E8DEC8] rounded-full px-3.5 py-1 text-xs font-bold text-[#111111] mb-6 shadow-sm">
-                <span className="w-2 h-2 rounded-full bg-[#B42318] animate-pulse" />
-                <span>CLASSICAL INDIAN DANCE ACADEMY</span>
-                <span className="text-[#777777]">·</span>
-                <span className="text-[#B42318] uppercase">SIH 2026</span>
-              </div>
+          {/* Big cinematic headline */}
+          <h1 className="text-5xl sm:text-7xl lg:text-8xl xl:text-9xl font-black text-white tracking-tight uppercase font-mono leading-[0.9] mb-6 drop-shadow-2xl">
+            RHYTHM <br />
+            <span className="text-[#B42318]">OF INDIA</span>
+          </h1>
 
-              {/* Large Editorial Headline */}
-              <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black text-[#111111] tracking-tight uppercase font-mono leading-[0.95]">
-                RHYTHM <br />
-                <span className="text-[#B42318]">OF INDIA</span>
-              </h1>
+          <p className="text-base sm:text-xl text-white/80 font-medium leading-relaxed max-w-xl mb-10">
+            Learn India&apos;s classical dance traditions through movement,
+            rhythm, expression and storytelling.
+          </p>
 
-              <p className="mt-5 text-base sm:text-lg text-[#252525] font-medium leading-relaxed max-w-2xl bg-white/40 backdrop-blur-md p-2 rounded-lg">
-                Learn India&apos;s classical dance traditions through movement,
-                rhythm, expression and storytelling. Master centuries of sacred
-                heritage through structured masterclasses.
-              </p>
-            </div>
-
-            {/* Quick Action Pills & Stats */}
-            <div className="flex flex-wrap lg:flex-col items-start lg:items-end gap-3">
-              <Link
-                href="#classical-forms"
-                className="inline-flex items-center gap-2 bg-[#B42318] hover:bg-[#C92A1E] text-white px-6 py-3 rounded-full text-xs sm:text-sm font-bold transition-all duration-300 hover:scale-105 active:scale-95 shadow-lg shadow-[#B42318]/20 cursor-pointer"
-              >
-                <span>Explore Dance Forms</span>
-                <ArrowRight size={16} />
-              </Link>
-
-              <Link
-                href="/pricing"
-                className="inline-flex items-center gap-2 bg-[#111111] hover:bg-[#252525] text-[#F8F1E6] px-5 py-3 rounded-full text-xs sm:text-sm font-bold transition-all duration-300 shadow-sm"
-              >
-                <span>Get Lifetime Pass</span>
-                <Sparkles size={14} className="text-[#B42318]" />
-              </Link>
-            </div>
+          {/* CTA Buttons */}
+          <div className="flex flex-wrap items-center gap-4">
+            <Link
+              href="#classical-forms"
+              className="inline-flex items-center gap-2 bg-[#B42318] hover:bg-[#C92A1E] text-white px-8 py-4 rounded-full text-sm font-bold transition-all duration-300 hover:scale-105 active:scale-95 shadow-2xl shadow-[#B42318]/40"
+            >
+              <span>Explore Dance Forms</span>
+              <ArrowRight size={18} />
+            </Link>
+            <Link
+              href="/pricing"
+              className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/30 text-white px-7 py-4 rounded-full text-sm font-bold transition-all duration-300"
+            >
+              <span>Get Lifetime Pass</span>
+              <Sparkles size={14} className="text-[#B42318]" />
+            </Link>
           </div>
-        </section>
+        </div>
+
+        {/* Scroll indicator */}
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-2 text-white/50">
+          <span className="text-[10px] font-bold tracking-widest uppercase">Scroll</span>
+          <div className="w-px h-10 bg-gradient-to-b from-white/50 to-transparent animate-pulse" />
+        </div>
+      </section>
+
+      <main className="pb-20 px-4 sm:px-8 max-w-7xl mx-auto space-y-12 pt-12">
 
         {/* ── 2. Dominant "Continue Learning" Feature Banner ── */}
         <section className="relative overflow-hidden rounded-[32px] bg-[#111111] text-[#F8F1E6] border border-[#252525] shadow-2xl">
