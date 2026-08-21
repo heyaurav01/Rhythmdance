@@ -144,15 +144,19 @@ export default function Navbar({ onSearch }: NavbarProps) {
         {/* Center: Navigation Links */}
         <nav className="hidden md:flex items-center gap-8 text-xs font-bold tracking-wide text-[#252525]">
           <Link
+            href="/dashboard"
+            className={`relative py-1 transition-colors hover:text-[#111111] flex flex-col items-center text-[#777777]`}
+          >
+            <span>Home</span>
+          </Link>
+
+          <Link
             href="/learning"
             className={`relative py-1 transition-colors hover:text-[#111111] flex flex-col items-center ${
               isLessonsActive ? "text-[#111111]" : "text-[#777777]"
             }`}
           >
             <span>My Learning</span>
-            {isLessonsActive && (
-              <span className="absolute -bottom-1 w-1.5 h-1.5 bg-[#B42318] rounded-full" />
-            )}
           </Link>
 
           <Link
@@ -169,9 +173,6 @@ export default function Navbar({ onSearch }: NavbarProps) {
             }`}
           >
             <span>Certificates</span>
-            {isCertificateActive && (
-              <span className="absolute -bottom-1 w-1.5 h-1.5 bg-[#B42318] rounded-full" />
-            )}
           </Link>
 
           <Link
@@ -181,9 +182,6 @@ export default function Navbar({ onSearch }: NavbarProps) {
             }`}
           >
             <span>Pricing</span>
-            {isPricingActive && (
-              <span className="absolute -bottom-1 w-1.5 h-1.5 bg-[#B42318] rounded-full" />
-            )}
           </Link>
         </nav>
 
