@@ -29,6 +29,9 @@ import {
   HelpCircle,
   Clock,
   Layers,
+  Sun,
+  Moon,
+  CreditCard,
 } from "lucide-react";
 
 export default function DanceLessonPage() {
@@ -42,6 +45,7 @@ export default function DanceLessonPage() {
   const [activeTab, setActiveTab] = useState<"transcript" | "overview" | "discussions" | "downloads">("transcript");
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const [justCompletedAnim, setJustCompletedAnim] = useState(false);
+  const [darkMode, setDarkMode] = useState(false);
 
   const dance = getDanceBySlug(slug);
 
@@ -117,7 +121,7 @@ export default function DanceLessonPage() {
     : null;
 
   return (
-    <div className="min-h-screen bg-[#F8F1E6] text-[#111111] selection:bg-[#B42318] selection:text-white">
+    <div className={`min-h-screen ${darkMode ? 'bg-[#111111] text-[#F8F1E6]' : 'bg-[#F8F1E6] text-[#111111]'} selection:bg-[#B42318] selection:text-white transition-colors duration-300`}>
       <Navbar />
 
       <main className="pt-20 pb-20 px-4 sm:px-8 max-w-7xl mx-auto space-y-6">
@@ -132,9 +136,32 @@ export default function DanceLessonPage() {
               <span>Your lessons</span>
             </button>
             <span>/</span>
-            <span className="text-[#111111] font-mono uppercase">
+            <span className={`${darkMode ? 'text-[#F8F1E6]' : 'text-[#111111]'} font-mono uppercase`}>
               {dance.name} · {isQuizView ? "Knowledge Quiz" : `Lesson ${selectedLesson + 1}. ${lesson?.title}`}
             </span>
+          </div>
+
+          {/* Right: Dark mode toggle + Payment access */}
+          <div className="flex items-center gap-2">
+            <Link
+              href="/pricing"
+              className="flex items-center gap-1.5 bg-[#B42318] hover:bg-[#C92A1E] text-white px-3 py-1.5 rounded-full text-[11px] font-bold transition-all"
+            >
+              <CreditCard size={12} />
+              <span>Get Full Access</span>
+            </Link>
+            <button
+              onClick={() => setDarkMode(!darkMode)}
+              className={`p-2 rounded-full border transition-all cursor-pointer ${
+                darkMode
+                  ? 'bg-[#252525] border-white/20 text-yellow-300 hover:bg-[#333333]'
+                  : 'bg-[#EFE7DA] border-[#E8DEC8] text-[#111111] hover:bg-[#E8DEC8]'
+              }`}
+              aria-label="Toggle dark mode"
+              title={darkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
+            >
+              {darkMode ? <Sun size={14} /> : <Moon size={14} />}
+            </button>
           </div>
 
           {!isQuizView && (
