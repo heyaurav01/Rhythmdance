@@ -6,7 +6,7 @@ import { Check, ShieldCheck, CreditCard, Smartphone, Lock, RefreshCw } from "luc
 import { motion } from "framer-motion";
 import Navbar from "@/components/Navbar";
 
-type PlanId = "monthly" | "yearly" | "lifetime";
+type PlanId = "junior-monthly" | "junior-yearly" | "youth-monthly" | "youth-yearly";
 
 interface Plan {
   id: PlanId;
@@ -18,39 +18,51 @@ interface Plan {
 
 const plans: Plan[] = [
   {
-    id: "monthly",
-    label: "Monthly Plan",
-    priceINR: 139,
+    id: "junior-monthly",
+    label: "Junior Monthly",
+    priceINR: 99,
     period: "Month",
     features: [
-      "Access to all classical dance courses",
-      "HD video lessons & tutorials",
-      "Interactive quizzes after modules",
-      "Progress tracking dashboard"
+      "Age-appropriate dance curriculum",
+      "HD video lessons with slow-motion replay",
+      "Fun interactive quizzes & badges",
+      "Progress tracking for parents"
     ]
   },
   {
-    id: "yearly",
-    label: "Annual Plan",
-    priceINR: 699,
+    id: "junior-yearly",
+    label: "Junior Annual",
+    priceINR: 499,
     period: "Year",
     features: [
-      "Everything in Monthly",
+      "Everything in Junior Monthly",
       "Save 58% compared to monthly",
-      "Priority certificate generation",
-      "Offline lesson notes (PDF)"
+      "Cultural stories & reading material",
+      "Priority certificate generation"
     ]
   },
   {
-    id: "lifetime",
-    label: "Lifetime Plan",
-    priceINR: 1999,
-    period: "One-time",
+    id: "youth-monthly",
+    label: "Youth Monthly",
+    priceINR: 149,
+    period: "Month",
     features: [
-      "Everything in Yearly",
-      "Lifetime access — no renewals",
-      "Gold-seal premium certificate",
-      "Exclusive premium community access"
+      "Full access to all dance forms",
+      "Advanced choreography modules",
+      "Performance technique workshops",
+      "Community forum access"
+    ]
+  },
+  {
+    id: "youth-yearly",
+    label: "Youth Annual",
+    priceINR: 799,
+    period: "Year",
+    features: [
+      "Everything in Youth Monthly",
+      "Save 55% compared to monthly",
+      "1-on-1 virtual guru feedback session",
+      "Gold-seal premium certificate"
     ]
   }
 ];

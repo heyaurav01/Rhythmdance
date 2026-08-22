@@ -92,7 +92,7 @@ export default function SettingsPage() {
                 <Shield size={16} className="text-[#B42318]" /> Security & Privacy
               </h3>
               <p className={`text-xs mb-4 ${theme === "light" ? "text-[#777777]" : "text-gray-400"}`}>
-                Manage your account security and SIH data protocol.
+                Manage your account security and data privacy settings.
               </p>
               <button className={`px-4 py-2 rounded-lg text-xs font-bold transition-colors ${theme === "light" ? "bg-[#EFE7DA] hover:bg-[#E8DEC8] text-[#111111]" : "bg-[#252525] hover:bg-[#333333] text-white"}`}>
                 Change Password

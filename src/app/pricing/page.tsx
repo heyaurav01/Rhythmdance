@@ -3,76 +3,97 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
-import {
-  Check,
-  AlertCircle,
-  RefreshCw,
-  Lock,
-  ArrowRight,
-  ShieldCheck,
-  Smartphone,
-  CreditCard as CreditCardIcon,
-  ShoppingBag,
-} from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { Check, ShieldCheck } from "lucide-react";
+import { motion } from "framer-motion";
 
-type PlanId = "monthly" | "yearly" | "lifetime";
+type PlanId = "junior-monthly" | "junior-yearly" | "youth-monthly" | "youth-yearly";
+type BillingCycle = "monthly" | "yearly";
 
 interface Plan {
   id: PlanId;
+  ageGroup: string;
+  ageRange: string;
   label: string;
   tag: string;
   priceINR: number;
   period: string;
   highlight: boolean;
+  description: string;
   features: string[];
 }
 
 const plans: Plan[] = [
   {
-    id: "monthly",
-    label: "Monthly",
-    tag: "FLEXIBLE",
-    priceINR: 139,
+    id: "junior-monthly",
+    ageGroup: "junior",
+    ageRange: "8 – 16 years",
+    label: "Junior",
+    tag: "FOR YOUNG LEARNERS",
+    priceINR: 99,
     period: "/month",
     highlight: false,
+    description: "Perfect for kids & teens beginning their classical dance journey.",
     features: [
-      "Access to all classical dance courses",
-      "HD video lessons & tutorials",
-      "Interactive quizzes after modules",
-      "Progress tracking dashboard",
+      "Age-appropriate dance curriculum",
+      "HD video lessons with slow-motion replay",
+      "Fun interactive quizzes & badges",
+      "Progress tracking for parents",
       "Basic certificate on completion",
     ],
   },
   {
-    id: "yearly",
-    label: "Yearly",
+    id: "junior-yearly",
+    ageGroup: "junior",
+    ageRange: "8 – 16 years",
+    label: "Junior",
     tag: "BEST VALUE",
-    priceINR: 699,
+    priceINR: 499,
     period: "/year",
     highlight: true,
+    description: "Save more with an annual plan for young dancers.",
     features: [
-      "Everything in Monthly",
+      "Everything in Junior Monthly",
       "Save 58% compared to monthly",
-      "Cultural articles & reading material",
-      "Priority certificate generation",
+      "Cultural stories & reading material",
       "Offline lesson notes (PDF)",
-      "Early access to new dance forms",
+      "Early access to new junior courses",
+      "Priority certificate generation",
     ],
   },
   {
-    id: "lifetime",
-    label: "Lifetime",
-    tag: "ONE-TIME",
-    priceINR: 1999,
-    period: " one-time",
+    id: "youth-monthly",
+    ageGroup: "youth",
+    ageRange: "18 – 24 years",
+    label: "Youth",
+    tag: "FOR YOUNG ADULTS",
+    priceINR: 149,
+    period: "/month",
     highlight: false,
+    description: "Advanced classical training for serious young performers.",
     features: [
-      "Everything in Yearly",
-      "Lifetime access — no renewals",
-      "All future courses & dance additions",
-      "Gold-seal premium certificate",
+      "Full access to all dance forms",
+      "Advanced choreography modules",
+      "Performance technique workshops",
+      "Community forum access",
+      "Standard certificate on completion",
+    ],
+  },
+  {
+    id: "youth-yearly",
+    ageGroup: "youth",
+    ageRange: "18 – 24 years",
+    label: "Youth",
+    tag: "BEST VALUE",
+    priceINR: 799,
+    period: "/year",
+    highlight: true,
+    description: "Commit to a year of mastery with maximum savings.",
+    features: [
+      "Everything in Youth Monthly",
+      "Save 55% compared to monthly",
       "1-on-1 virtual guru feedback session",
+      "Gold-seal premium certificate",
+      "Offline lesson notes & sheet music",
       "Exclusive premium community access",
     ],
   },
@@ -95,25 +116,19 @@ const symbols: Record<string, string> = {
 export default function PricingPage() {
   const router = useRouter();
   const [currency, setCurrency] = useState<"INR" | "USD" | "EUR" | "GBP">("INR");
-  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
-  const [processingState, setProcessingState] = useState<"idle" | "processing" | "success">("idle");
-  const [selectedPlan, setSelectedPlan] = useState<PlanId>("yearly");
-  const [paymentMethod, setPaymentMethod] = useState<"phonepe" | "gpay" | "upi" | "card">("phonepe");
-  const [includeMerch, setIncludeMerch] = useState(false);
+  const [billingCycle, setBillingCycle] = useState<BillingCycle>("monthly");
 
   const getPrice = (inrPrice: number) => {
-    let base = inrPrice;
-    if (includeMerch) base += 500;
-    const converted = base * exchangeRates[currency];
+    const converted = inrPrice * exchangeRates[currency];
     if (currency === "INR") return Math.round(converted).toLocaleString("en-IN");
     return converted.toFixed(2);
   };
 
-  const activePlan = plans.find((p) => p.id === selectedPlan)!;
-
   const handleCheckout = (planId: PlanId) => {
     router.push(`/checkout?plan=${planId}&currency=${currency}`);
   };
+
+  const filteredPlans = plans.filter((p) => p.id.endsWith(billingCycle));
 
   return (
     <div className="min-h-screen bg-[#F8F1E6] text-[#111111] selection:bg-[#B42318] selection:text-white">
@@ -127,31 +142,57 @@ export default function PricingPage() {
             animate={{ opacity: 1, y: 0 }}
             className="text-3xl sm:text-5xl font-black uppercase text-[#111111] font-mono tracking-tight leading-[0.95] mb-4"
           >
-            Choose your{" "}
-            <span className="text-[#B42318]">learning plan</span>
+            Pricing{" "}
+            <span className="text-[#B42318]">Plans</span>
           </motion.h1>
 
           <motion.p
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="text-sm sm:text-base text-[#777777] font-medium max-w-xl mx-auto leading-relaxed"
+            className="text-sm sm:text-base text-[#999999] font-medium max-w-xl mx-auto leading-relaxed"
           >
-            Access Indian classical dance courses, lessons, cultural articles, quizzes, progress tracking, and certificates.
+            Manage, track, and optimize your classical dance learning with a plan built for your age group.
           </motion.p>
+        </div>
+
+        {/* Billing Toggle */}
+        <div className="flex justify-center">
+          <div className="bg-white p-1 rounded-full border border-[#E8DEC8] inline-flex items-center gap-1 shadow-sm">
+            <button
+              onClick={() => setBillingCycle("monthly")}
+              className={`px-6 py-2.5 rounded-full text-sm font-bold transition-all cursor-pointer ${
+                billingCycle === "monthly"
+                  ? "bg-[#111111] text-white shadow-md"
+                  : "text-[#999999] hover:text-[#111111]"
+              }`}
+            >
+              Monthly
+            </button>
+            <button
+              onClick={() => setBillingCycle("yearly")}
+              className={`px-6 py-2.5 rounded-full text-sm font-bold transition-all cursor-pointer ${
+                billingCycle === "yearly"
+                  ? "bg-[#111111] text-white shadow-md"
+                  : "text-[#999999] hover:text-[#111111]"
+              }`}
+            >
+              Yearly
+            </button>
+          </div>
         </div>
 
         {/* Currency Switcher */}
         <div className="flex justify-center">
-          <div className="bg-[#EFE7DA] p-1.5 rounded-full border border-[#E8DEC8] inline-flex items-center gap-1 shadow-sm">
+          <div className="bg-[#EFE7DA] p-1 rounded-full border border-[#E8DEC8] inline-flex items-center gap-1">
             {(["INR", "USD", "EUR", "GBP"] as const).map((curr) => (
               <button
                 key={curr}
                 onClick={() => setCurrency(curr)}
-                className={`px-4 sm:px-5 py-2 rounded-full text-xs font-bold font-mono transition-all cursor-pointer ${
+                className={`px-3 py-1.5 rounded-full text-[11px] font-bold font-mono transition-all cursor-pointer ${
                   currency === curr
-                    ? "bg-[#111111] text-white shadow-md"
-                    : "text-[#777777] hover:text-[#111111]"
+                    ? "bg-[#111111] text-white"
+                    : "text-[#999999] hover:text-[#111111]"
                 }`}
               >
                 {symbols[curr]} {curr}
@@ -160,65 +201,53 @@ export default function PricingPage() {
           </div>
         </div>
 
-        {/* Pricing Cards — 3 columns */}
-        <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto items-stretch">
-          {plans.map((plan, idx) => (
+        {/* Pricing Cards — 2 columns */}
+        <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto items-stretch">
+          {filteredPlans.map((plan, idx) => (
             <motion.div
               key={plan.id}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.15 + idx * 0.1 }}
-              className={`rounded-[28px] p-7 sm:p-8 flex flex-col justify-between relative overflow-hidden transition-all ${
+              className={`group rounded-[24px] p-7 sm:p-9 flex flex-col justify-between relative overflow-hidden transition-all duration-300 cursor-default ${
                 plan.highlight
-                  ? "bg-[#111111] text-[#F8F1E6] border-2 border-[#B42318] shadow-2xl scale-[1.03]"
-                  : "bg-white border border-[#E8DEC8] shadow-sm"
+                  ? "bg-white border-2 border-[#B42318]/60 shadow-md hover:shadow-xl hover:border-[#B42318] hover:-translate-y-1"
+                  : "bg-white border border-[#E0D8CB] shadow-sm hover:shadow-lg hover:border-[#C0B8A8] hover:-translate-y-1"
               }`}
             >
+              {/* Gradient accent for highlighted cards */}
+              {plan.highlight && (
+                <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#B42318] via-[#E85D4A] to-[#B42318]" />
+              )}
+
               <div>
-                {/* Tag */}
+                {/* Age Range Badge */}
                 <div className="flex items-center justify-between mb-5">
-                  <span
-                    className={`text-[10px] font-black uppercase font-mono tracking-widest ${
-                      plan.highlight ? "text-[#B42318]" : "text-[#777777]"
-                    }`}
-                  >
-                    {plan.tag}
+                  <span className="text-[11px] font-black uppercase tracking-widest text-[#B42318] bg-[#FDF2F2] px-3 py-1 rounded-full">
+                    {plan.ageRange}
                   </span>
+                  {plan.highlight && (
+                    <span className="text-[10px] font-black uppercase tracking-widest text-[#B42318] font-mono">
+                      {plan.tag}
+                    </span>
+                  )}
                 </div>
 
                 {/* Plan name */}
-                <h3
-                  className={`text-xl sm:text-2xl font-black uppercase font-mono tracking-tight mb-1 ${
-                    plan.highlight ? "text-white" : "text-[#111111]"
-                  }`}
-                >
+                <h3 className="text-2xl sm:text-3xl font-black uppercase font-mono tracking-tight mb-1 text-[#222222]">
                   {plan.label}
                 </h3>
-                <p
-                  className={`text-xs font-medium mb-6 ${
-                    plan.highlight ? "text-gray-400" : "text-[#777777]"
-                  }`}
-                >
-                  {plan.id === "monthly" && "Pay as you learn, cancel anytime."}
-                  {plan.id === "yearly" && "Best value for committed learners."}
-                  {plan.id === "lifetime" && "One payment, access forever."}
+                <p className="text-xs font-medium mb-6 text-[#999999]">
+                  {plan.description}
                 </p>
 
                 {/* Price */}
                 <div className="mb-8">
-                  <span
-                    className={`text-4xl sm:text-5xl font-black font-mono ${
-                      plan.highlight ? "text-white" : "text-[#111111]"
-                    }`}
-                  >
+                  <span className="text-4xl sm:text-5xl font-black font-mono text-[#222222]">
                     {symbols[currency]}
                     {getPrice(plan.priceINR)}
                   </span>
-                  <span
-                    className={`text-xs font-mono ${
-                      plan.highlight ? "text-gray-400" : "text-[#777777]"
-                    }`}
-                  >
+                  <span className="text-xs font-mono text-[#999999] ml-1">
                     {plan.period}
                   </span>
                 </div>
@@ -228,13 +257,11 @@ export default function PricingPage() {
                   {plan.features.map((feat, i) => (
                     <li
                       key={i}
-                      className={`flex items-start gap-2.5 text-xs sm:text-sm font-semibold ${
-                        plan.highlight ? "text-gray-200" : "text-[#252525]"
-                      }`}
+                      className="flex items-start gap-2.5 text-xs sm:text-sm font-medium text-[#444444]"
                     >
                       <Check
                         size={15}
-                        className="text-[#B42318] flex-shrink-0 mt-0.5"
+                        className={`flex-shrink-0 mt-0.5 ${plan.highlight ? "text-[#B42318]" : "text-[#999999]"}`}
                       />
                       <span>{feat}</span>
                     </li>
@@ -245,15 +272,13 @@ export default function PricingPage() {
               {/* CTA */}
               <button
                 onClick={() => handleCheckout(plan.id)}
-                className={`w-full py-3.5 font-black uppercase tracking-wider text-xs rounded-full transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer flex items-center justify-center gap-2 ${
+                className={`w-full py-3.5 font-bold uppercase tracking-wider text-sm rounded-full transition-all duration-300 hover:scale-[1.02] active:scale-95 cursor-pointer flex items-center justify-center gap-2 ${
                   plan.highlight
-                    ? "bg-[#B42318] hover:bg-[#C92A1E] text-white shadow-xl shadow-[#B42318]/30"
-                    : "bg-[#EFE7DA] hover:bg-[#E8DEC8] text-[#111111]"
+                    ? "bg-[#B42318] hover:bg-[#9E1F14] text-white shadow-md"
+                    : "bg-[#111111] hover:bg-[#222222] text-white shadow-sm"
                 }`}
               >
-                <span>
-                  Get {plan.label} →
-                </span>
+                Get Started
               </button>
             </motion.div>
           ))}
@@ -261,11 +286,11 @@ export default function PricingPage() {
 
         {/* Disclaimer */}
         <div className="max-w-2xl mx-auto text-center space-y-2 pt-4">
-          <div className="inline-flex items-center gap-2 text-xs font-bold text-[#777777]">
+          <div className="inline-flex items-center gap-2 text-xs font-bold text-[#999999]">
             <ShieldCheck size={16} className="text-[#B42318]" />
             <span>Secure Payment Gateway · 256-bit SSL Encrypted</span>
           </div>
-          <p className="text-[11px] text-[#777777]">
+          <p className="text-[11px] text-[#999999]">
             Rhythm of India — India's premier classical dance learning platform.
           </p>
         </div>
