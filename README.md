@@ -4,7 +4,7 @@ A web application celebrating India's classical dance heritage — explore all 8
 
 ## ✨ Features
 
-- **8 Classical Dance Forms** — Dedicated content and unique imagery for each of India's classical dances
+- **Classical Dance Forms** — Dedicated content and unique imagery for each of India's classical dances
 - **Dark Mode** — Toggle between light and dark themes for comfortable viewing
 - **Certificate Generation** — Download personalized certificates as PDF
 - **Modern UI** — Clean, responsive interface with a polished startup splash screen
