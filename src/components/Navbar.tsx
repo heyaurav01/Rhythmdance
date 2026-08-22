@@ -98,12 +98,33 @@ export default function Navbar({ onSearch }: NavbarProps) {
   const isPricingActive = pathname.startsWith("/pricing");
   const isCertificateActive = pathname.startsWith("/certificate");
 
+  const [customName, setCustomName] = useState("");
+  const [avatarUrl, setAvatarUrl] = useState("");
+
+  const loadProfile = useCallback(() => {
+    try {
+      const stored = localStorage.getItem("roi_user_profile");
+      if (stored) {
+        const data = JSON.parse(stored);
+        if (data.name) setCustomName(data.name);
+        if (data.avatarUrl) setAvatarUrl(data.avatarUrl);
+      }
+    } catch(e) {}
+  }, []);
+
+  useEffect(() => {
+    loadProfile();
+    window.addEventListener('roi_profile_updated', loadProfile);
+    return () => window.removeEventListener('roi_profile_updated', loadProfile);
+  }, [loadProfile]);
+
   // Derive display name and initial from authenticated user
-  const userName = user?.isAnonymous
+  const defaultName = user?.isAnonymous
     ? "Guest Explorer"
     : user?.email?.split("@")[0] || "Dancer";
 
-  const userInitial = userName.trim().charAt(0).toUpperCase() || "U";
+  const displayName = customName || defaultName;
+  const userInitial = displayName.trim().charAt(0).toUpperCase() || "U";
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-[#F8F1E6]/95 backdrop-blur-md border-b border-[#E8DEC8] transition-all duration-300">
@@ -211,8 +232,8 @@ export default function Navbar({ onSearch }: NavbarProps) {
                 className="flex items-center gap-1.5 cursor-pointer group"
               >
                 {/* Large circular avatar — 44px desktop, 40px mobile */}
-                <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-[#111111] text-white flex items-center justify-center text-base sm:text-lg font-black uppercase ring-2 ring-transparent group-hover:ring-[#B42318] transition-all shadow-md">
-                  {userInitial}
+                <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-[#111111] text-white flex items-center justify-center text-base sm:text-lg font-black uppercase ring-2 ring-transparent group-hover:ring-[#B42318] transition-all shadow-md overflow-hidden">
+                  {avatarUrl ? <img src={avatarUrl} alt="Avatar" className="w-full h-full object-cover" /> : userInitial}
                 </div>
                 <ChevronDown size={14} className="text-[#777777] group-hover:text-[#111111] transition-colors hidden sm:block" />
               </button>
@@ -223,12 +244,12 @@ export default function Navbar({ onSearch }: NavbarProps) {
                   {/* User identity card */}
                   <div className="p-3.5 bg-[#F8F1E6] rounded-xl mb-1.5">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full bg-[#111111] text-white flex items-center justify-center text-base font-black uppercase flex-shrink-0">
-                        {userInitial}
+                      <div className="w-10 h-10 rounded-full bg-[#111111] text-white flex items-center justify-center text-base font-black uppercase flex-shrink-0 overflow-hidden">
+                        {avatarUrl ? <img src={avatarUrl} alt="Avatar" className="w-full h-full object-cover" /> : userInitial}
                       </div>
                       <div className="min-w-0">
                         <p className="text-sm font-black text-[#111111] truncate capitalize">
-                          {userName}
+                          {displayName}
                         </p>
                         <p className="text-[10px] text-[#777777] truncate">
                           {user.email || "guest@rhythmofindia.org"}

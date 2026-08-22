@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useRef, useMemo, useState } from "react";
+import { Suspense, useRef, useMemo, useState, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import Navbar from "@/components/Navbar";
@@ -15,9 +15,22 @@ function CertificateContent() {
   const [downloading, setDownloading] = useState(false);
 
   const danceName = searchParams.get("dance") || "Odissi";
-  const userName = user?.isAnonymous
+  const [customName, setCustomName] = useState("");
+
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem("roi_user_profile");
+      if (stored) {
+        const data = JSON.parse(stored);
+        if (data.name) setCustomName(data.name);
+      }
+    } catch(e) {}
+  }, []);
+
+  const defaultName = user?.isAnonymous
     ? "Guest Explorer"
     : user?.email?.split("@")[0] || "Classical Scholar";
+  const userName = customName || defaultName;
   const today = new Date().toLocaleDateString("en-IN", {
     day: "numeric",
     month: "long",
@@ -43,7 +56,12 @@ function CertificateContent() {
         margin:       0,
         filename:     `Rhythm-of-India-Certificate.pdf`,
         image:        { type: 'jpeg' as const, quality: 1 },
-        html2canvas:  { scale: 2, useCORS: true },
+        html2canvas:  { 
+          scale: 2, 
+          useCORS: true,
+          backgroundColor: "#ffffff",
+          foreignObjectRendering: false
+        },
         jsPDF:        { unit: 'mm' as const, format: 'a4' as const, orientation: 'landscape' as const }
       };
 
@@ -83,7 +101,7 @@ function CertificateContent() {
         initial={{ opacity: 0, scale: 0.96 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ delay: 0.2 }}
-        className="relative bg-white border-4 border-[#111111] rounded-[36px] p-8 sm:p-16 shadow-2xl mx-auto max-w-3xl overflow-hidden print:border-2 print:shadow-none print:m-0"
+        className="relative bg-white border-4 border-[#111111] rounded-[36px] p-8 sm:p-16 mx-auto max-w-3xl overflow-hidden print:border-2 print:m-0"
       >
         {/* Ornate Red Corner Accents */}
         <div className="absolute top-4 left-4 w-12 h-12 border-t-4 border-l-4 border-[#B42318] rounded-tl-xl" />
@@ -116,7 +134,7 @@ function CertificateContent() {
           </div>
 
           {/* Scholar Name */}
-          <h3 className="text-3xl sm:text-5xl font-black uppercase tracking-tight text-[#111111] font-mono py-2 border-b-2 border-[#111111]/10 max-w-md mx-auto">
+          <h3 className="text-3xl sm:text-5xl font-black uppercase tracking-tight text-[#111111] font-mono py-2 border-b-2 border-[#E5E5E5] max-w-md mx-auto">
             {userName}
           </h3>
 
@@ -150,7 +168,7 @@ function CertificateContent() {
           </div>
 
           {/* Signatures */}
-          <div className="grid grid-cols-2 gap-8 pt-4 max-w-sm mx-auto text-center border-t border-[#E8DEC8]/50">
+          <div className="grid grid-cols-2 gap-8 pt-4 max-w-sm mx-auto text-center border-t border-[#F0EBE1]">
             <div>
               <p className="font-serif italic text-sm font-bold text-[#111111]">Guru Mandali</p>
               <p className="text-[9px] font-mono text-[#777777] uppercase">Lineage Academic Council</p>
