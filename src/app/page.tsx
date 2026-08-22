@@ -106,7 +106,7 @@ export default function LandingPage() {
             <span className="w-2 h-2 rounded-full bg-[#B42318] animate-pulse" />
             <span>Classical Indian Dance Academy</span>
             <span className="text-[#B42318]">·</span>
-            <span className="text-gray-300 font-mono">SIH 2026</span>
+            <span className="text-gray-300 font-mono">Est. 2026</span>
           </div>
 
           {/* Typewriter Title */}
@@ -295,7 +295,7 @@ export default function LandingPage() {
 
           {/* Footer */}
           <p className="text-center text-[11px] text-[#777777] mt-6 font-medium">
-            Smart India Hackathon Prototype · Dedicated to Indian Classical Traditions
+            Dedicated to Indian Classical Traditions · Rhythm of India Academy
           </p>
         </div>
       </div>
