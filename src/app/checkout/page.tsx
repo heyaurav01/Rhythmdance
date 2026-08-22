@@ -6,7 +6,7 @@ import { Check, ShieldCheck, CreditCard, Smartphone, Lock, RefreshCw } from "luc
 import { motion } from "framer-motion";
 import Navbar from "@/components/Navbar";
 
-type PlanId = "junior-monthly" | "junior-yearly" | "youth-monthly" | "youth-yearly";
+type PlanId = "monthly" | "yearly" | "lifetime";
 
 interface Plan {
   id: PlanId;
@@ -18,51 +18,39 @@ interface Plan {
 
 const plans: Plan[] = [
   {
-    id: "junior-monthly",
-    label: "Junior Monthly",
-    priceINR: 99,
+    id: "monthly",
+    label: "Monthly Plan",
+    priceINR: 139,
     period: "Month",
     features: [
-      "Age-appropriate dance curriculum",
-      "HD video lessons with slow-motion replay",
-      "Fun interactive quizzes & badges",
-      "Progress tracking for parents"
+      "Access to all classical dance courses",
+      "HD video lessons & tutorials",
+      "Interactive quizzes after modules",
+      "Progress tracking dashboard"
     ]
   },
   {
-    id: "junior-yearly",
-    label: "Junior Annual",
-    priceINR: 499,
+    id: "yearly",
+    label: "Annual Plan",
+    priceINR: 699,
     period: "Year",
     features: [
-      "Everything in Junior Monthly",
+      "Everything in Monthly",
       "Save 58% compared to monthly",
-      "Cultural stories & reading material",
-      "Priority certificate generation"
+      "Priority certificate generation",
+      "Offline lesson notes (PDF)"
     ]
   },
   {
-    id: "youth-monthly",
-    label: "Youth Monthly",
-    priceINR: 149,
-    period: "Month",
+    id: "lifetime",
+    label: "Lifetime Plan",
+    priceINR: 1999,
+    period: "One-time",
     features: [
-      "Full access to all dance forms",
-      "Advanced choreography modules",
-      "Performance technique workshops",
-      "Community forum access"
-    ]
-  },
-  {
-    id: "youth-yearly",
-    label: "Youth Annual",
-    priceINR: 799,
-    period: "Year",
-    features: [
-      "Everything in Youth Monthly",
-      "Save 55% compared to monthly",
-      "1-on-1 virtual guru feedback session",
-      "Gold-seal premium certificate"
+      "Everything in Yearly",
+      "Lifetime access — no renewals",
+      "Gold-seal premium certificate",
+      "Exclusive premium community access"
     ]
   }
 ];
