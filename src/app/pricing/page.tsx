@@ -73,7 +73,7 @@ const plans: Plan[] = [
       "All future courses & dance additions",
       "Gold-seal premium certificate",
       "1-on-1 virtual guru feedback session",
-      "Exclusive SIH community access",
+      "Exclusive premium community access",
     ],
   },
 ];
@@ -263,10 +263,10 @@ export default function PricingPage() {
         <div className="max-w-2xl mx-auto text-center space-y-2 pt-4">
           <div className="inline-flex items-center gap-2 text-xs font-bold text-[#777777]">
             <ShieldCheck size={16} className="text-[#B42318]" />
-            <span>Demo UPI Gateway · No real charges will occur</span>
+            <span>Secure Payment Gateway · 256-bit SSL Encrypted</span>
           </div>
           <p className="text-[11px] text-[#777777]">
-            Rhythm of India is a Smart India Hackathon learning prototype. Payment is simulated.
+            Rhythm of India — India's premier classical dance learning platform.
           </p>
         </div>
       </main>

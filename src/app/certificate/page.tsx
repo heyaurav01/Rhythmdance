@@ -40,7 +40,7 @@ function CertificateContent() {
   // Generate certId once per mount to avoid impure render calls
   const certId = useMemo(
     () =>
-      `ROI-SIH26-${danceName.toUpperCase().slice(0, 3)}-${Math.floor(1000 + Math.random() * 9000)}`,
+      `ROI-26-${danceName.toUpperCase().slice(0, 3)}-${Math.floor(1000 + Math.random() * 9000)}`,
     [danceName]
   );
 
@@ -119,7 +119,7 @@ function CertificateContent() {
               RHYTHM OF INDIA ACADEMY
             </p>
             <p className="text-[10px] font-bold tracking-widest text-[#B42318] uppercase">
-              SMART INDIA HACKATHON · NATIONAL HERITAGE PROTOCOL
+              NATIONAL HERITAGE PROTOCOL · CLASSICAL ARTS ACADEMY
             </p>
           </div>
 

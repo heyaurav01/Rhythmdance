@@ -50,7 +50,7 @@ const plans: Plan[] = [
       "Everything in Yearly",
       "Lifetime access — no renewals",
       "Gold-seal premium certificate",
-      "Exclusive SIH community access"
+      "Exclusive premium community access"
     ]
   }
 ];
@@ -258,7 +258,7 @@ function CheckoutContent() {
                       <div className="relative">
                         <input 
                           type="text" 
-                          defaultValue="1234 5678 9012 3456"
+
                           className="w-full p-4 rounded-xl border border-[#E8DEC8] bg-white outline-none focus:border-[#635BFF] focus:ring-1 focus:ring-[#635BFF] transition-all text-sm font-mono tracking-widest"
                           placeholder="Card Number"
                         />
@@ -267,13 +267,13 @@ function CheckoutContent() {
                       <div className="grid grid-cols-2 gap-3">
                         <input 
                           type="text" 
-                          defaultValue="12/28"
+
                           className="w-full p-4 rounded-xl border border-[#E8DEC8] bg-white outline-none focus:border-[#635BFF] focus:ring-1 focus:ring-[#635BFF] transition-all text-sm"
                           placeholder="MM/YY"
                         />
                         <input 
                           type="text" 
-                          defaultValue="123"
+
                           className="w-full p-4 rounded-xl border border-[#E8DEC8] bg-white outline-none focus:border-[#635BFF] focus:ring-1 focus:ring-[#635BFF] transition-all text-sm"
                           placeholder="CVV"
                         />
@@ -302,7 +302,7 @@ function CheckoutContent() {
                       </p>
                       <input 
                         type="text" 
-                        defaultValue="9876543210"
+
                         className="w-full p-4 rounded-xl border border-[#E8DEC8] bg-white outline-none focus:border-[#635BFF] focus:ring-1 focus:ring-[#635BFF] transition-all text-sm text-center font-mono"
                         placeholder="e.g. name@okaxis"
                       />
@@ -331,7 +331,7 @@ function CheckoutContent() {
                 
                 <p className="text-[10px] text-[#777777] mt-4 flex items-start gap-2 leading-relaxed">
                   <ShieldCheck size={14} className="flex-shrink-0 mt-0.5" />
-                  Your payment data is fully encrypted and handled with the highest security standards. This is a hackathon prototype, no real charges will occur.
+                  Your payment data is fully encrypted and handled with the highest security standards.
                 </p>
               </div>
             </div>

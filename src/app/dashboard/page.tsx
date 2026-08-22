@@ -129,7 +129,7 @@ export default function DashboardPage() {
             <span className="w-2 h-2 rounded-full bg-[#B42318] animate-pulse" />
             <span>CLASSICAL INDIAN DANCE ACADEMY</span>
             <span className="text-white/50">·</span>
-            <span className="text-[#B42318] uppercase">SIH 2026</span>
+            <span className="text-[#B42318] uppercase">Est. 2026</span>
           </div>
 
           {/* Big cinematic headline */}
@@ -442,7 +442,7 @@ export default function DashboardPage() {
                 {/* SIH 2026 badge */}
                 <div className="mt-8 inline-flex items-center gap-2 bg-[#B42318]/20 border border-[#B42318]/40 text-[#B42318] px-4 py-2 rounded-xl text-sm font-bold font-mono">
                   <span className="w-2 h-2 rounded-full bg-[#B42318] animate-pulse" />
-                  SIH 2026 Prototype
+                  Rhythm of India
                 </div>
               </div>
             </div>
@@ -455,7 +455,7 @@ export default function DashboardPage() {
 
           {/* Bottom bar */}
           <div className="mt-16 px-10 sm:px-14 lg:px-24 py-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4 relative z-10 bg-black/40 backdrop-blur-md">
-            <p className="text-sm text-[#777777] font-mono font-medium">© 2026 Rhythm of India. All rights reserved. Built for Smart India Hackathon 2026.</p>
+            <p className="text-sm text-[#777777] font-mono font-medium">© 2026 Rhythm of India. All rights reserved.</p>
             <a
               href="https://github.com/heyaurav01/Rhythmdance"
               target="_blank"
