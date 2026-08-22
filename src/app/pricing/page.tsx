@@ -11,6 +11,8 @@ import {
   ArrowRight,
   ShieldCheck,
   Smartphone,
+  CreditCard as CreditCardIcon,
+  ShoppingBag,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -96,9 +98,13 @@ export default function PricingPage() {
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [processingState, setProcessingState] = useState<"idle" | "processing" | "success">("idle");
   const [selectedPlan, setSelectedPlan] = useState<PlanId>("yearly");
+  const [paymentMethod, setPaymentMethod] = useState<"phonepe" | "gpay" | "upi" | "card">("phonepe");
+  const [includeMerch, setIncludeMerch] = useState(false);
 
   const getPrice = (inrPrice: number) => {
-    const converted = inrPrice * exchangeRates[currency];
+    let base = inrPrice;
+    if (includeMerch) base += 500;
+    const converted = base * exchangeRates[currency];
     if (currency === "INR") return Math.round(converted).toLocaleString("en-IN");
     return converted.toFixed(2);
   };
@@ -115,9 +121,24 @@ export default function PricingPage() {
     setProcessingState("processing");
     setTimeout(() => {
       setProcessingState("success");
+      
+      const newInvoice = {
+        id: `INV-${Math.floor(Math.random() * 1000000)}`,
+        date: new Date().toLocaleDateString("en-IN"),
+        plan: activePlan.label,
+        amount: `${symbols[currency]}${getPrice(activePlan.priceINR)}`,
+        method: paymentMethod,
+        merch: includeMerch,
+      };
+      
+      try {
+        const stored = JSON.parse(localStorage.getItem("roi_invoices") || "[]");
+        localStorage.setItem("roi_invoices", JSON.stringify([newInvoice, ...stored]));
+      } catch(e) {}
+
       setTimeout(() => {
         setIsCheckoutOpen(false);
-        router.push("/dashboard");
+        router.push("/subscription");
       }, 2500);
     }, 2000);
   };
@@ -318,6 +339,7 @@ export default function PricingPage() {
                           {activePlan.label} Plan
                         </p>
                         <p className="text-[11px] text-[#777777]">All classical dance courses</p>
+                        {includeMerch && <p className="text-[11px] text-[#B42318]">+ Exclusive Merchandise Kit</p>}
                       </div>
                       <span className="text-base font-black font-mono text-[#B42318]">
                         {symbols[currency]}
@@ -325,17 +347,76 @@ export default function PricingPage() {
                       </span>
                     </div>
 
-                    {/* UPI ID field */}
-                    <div>
-                      <label className="text-[10px] font-black uppercase tracking-wider text-[#777777] font-mono mb-1 block">
-                        UPI ID
-                      </label>
-                      <input
-                        type="text"
-                        defaultValue="student@upi"
-                        className="w-full bg-white border border-[#E8DEC8] rounded-xl px-4 py-3 text-xs font-semibold focus:border-[#B42318] outline-none text-[#111111] font-mono"
+                    {/* Merch Toggle */}
+                    <label className="flex items-center gap-3 bg-[#EFE7DA] p-3 rounded-xl border border-[#E8DEC8] cursor-pointer hover:border-[#B42318] transition-colors">
+                      <input 
+                        type="checkbox" 
+                        checked={includeMerch} 
+                        onChange={(e) => setIncludeMerch(e.target.checked)}
+                        className="w-4 h-4 accent-[#B42318]"
                       />
+                      <div className="flex-1">
+                        <p className="text-[11px] font-black uppercase tracking-wider text-[#111111] font-mono flex items-center gap-1.5"><ShoppingBag size={12}/> Add Merchandise Kit</p>
+                        <p className="text-[10px] text-[#777777]">T-shirt, bottle & booklet (+{symbols[currency]}{currency === 'INR' ? 500 : (500 * exchangeRates[currency]).toFixed(2)})</p>
+                      </div>
+                    </label>
+
+                    {/* Payment Method Selector */}
+                    <div>
+                      <label className="text-[10px] font-black uppercase tracking-wider text-[#777777] font-mono mb-2 block">
+                        Select Payment Method
+                      </label>
+                      <div className="grid grid-cols-2 gap-2">
+                        {[
+                          { id: "upi", label: "Other UPI", icon: <Smartphone size={14} /> },
+                          { id: "phonepe", label: "PhonePe", icon: <Smartphone size={14} /> },
+                          { id: "gpay", label: "Google Pay", icon: <Smartphone size={14} /> },
+                          { id: "card", label: "Card Pay", icon: <CreditCardIcon size={14} /> },
+                        ].map((m) => (
+                          <button
+                            key={m.id}
+                            onClick={() => setPaymentMethod(m.id as any)}
+                            className={`flex items-center gap-2 p-2 rounded-xl text-[11px] font-bold border transition-all ${
+                              paymentMethod === m.id
+                                ? "bg-[#111111] text-white border-[#111111]"
+                                : "bg-white text-[#777777] border-[#E8DEC8] hover:border-[#111111] hover:text-[#111111]"
+                            }`}
+                          >
+                            {m.icon}
+                            {m.label}
+                          </button>
+                        ))}
+                      </div>
                     </div>
+
+                    {/* Dynamic Fields */}
+                    {paymentMethod === "card" ? (
+                      <div>
+                        <label className="text-[10px] font-black uppercase tracking-wider text-[#777777] font-mono mb-1 block">
+                          Card Number
+                        </label>
+                        <input
+                          type="text"
+                          defaultValue="4111 1111 1111 1111"
+                          className="w-full bg-white border border-[#E8DEC8] rounded-xl px-4 py-3 text-xs font-semibold focus:border-[#B42318] outline-none text-[#111111] font-mono mb-2"
+                        />
+                        <div className="grid grid-cols-2 gap-2">
+                          <input type="text" placeholder="MM/YY" defaultValue="12/26" className="w-full bg-white border border-[#E8DEC8] rounded-xl px-4 py-3 text-xs font-semibold focus:border-[#B42318] outline-none text-[#111111] font-mono" />
+                          <input type="text" placeholder="CVV" defaultValue="123" className="w-full bg-white border border-[#E8DEC8] rounded-xl px-4 py-3 text-xs font-semibold focus:border-[#B42318] outline-none text-[#111111] font-mono" />
+                        </div>
+                      </div>
+                    ) : (
+                      <div>
+                        <label className="text-[10px] font-black uppercase tracking-wider text-[#777777] font-mono mb-1 block">
+                          {paymentMethod === "upi" ? "UPI ID" : paymentMethod === "phonepe" ? "PhonePe Number/UPI ID" : "Google Pay Number/UPI ID"}
+                        </label>
+                        <input
+                          type="text"
+                          defaultValue={paymentMethod === "upi" ? "student@upi" : "9876543210"}
+                          className="w-full bg-white border border-[#E8DEC8] rounded-xl px-4 py-3 text-xs font-semibold focus:border-[#B42318] outline-none text-[#111111] font-mono"
+                        />
+                      </div>
+                    )}
 
                     {/* Name */}
                     <div>
@@ -363,7 +444,7 @@ export default function PricingPage() {
                       <Lock size={14} />
                       <span>
                         PAY {symbols[currency]}
-                        {getPrice(activePlan.priceINR)} VIA UPI
+                        {getPrice(activePlan.priceINR)}
                       </span>
                       <ArrowRight size={14} />
                     </button>

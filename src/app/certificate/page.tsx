@@ -41,10 +41,10 @@ function CertificateContent() {
       
       const opt = {
         margin:       0,
-        filename:     `RHYTHM-OF-INDIA-Certificate.pdf`,
+        filename:     `Rhythm-of-India-Certificate.pdf`,
         image:        { type: 'jpeg' as const, quality: 1 },
         html2canvas:  { scale: 2, useCORS: true },
-        jsPDF:        { unit: 'in' as const, format: 'letter' as const, orientation: 'portrait' as const }
+        jsPDF:        { unit: 'mm' as const, format: 'a4' as const, orientation: 'landscape' as const }
       };
 
       await html2pdf().set(opt).from(certRef.current).save();

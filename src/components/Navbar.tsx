@@ -270,12 +270,12 @@ export default function Navbar({ onSearch }: NavbarProps) {
                   </Link>
 
                   <Link
-                    href="/pricing"
+                    href="/subscription"
                     onClick={() => setProfileOpen(false)}
                     className="flex items-center gap-2.5 px-3 py-2.5 text-xs font-semibold text-[#252525] hover:bg-[#F8F1E6] rounded-lg transition-colors"
                   >
                     <CreditCard size={14} className="text-[#B42318]" />
-                    Subscription
+                    My Subscription
                   </Link>
 
                   <Link
