@@ -367,9 +367,10 @@ export default function DashboardPage() {
             ))}
           </div>
         </section>
+      </main>
 
-        {/* ── 6. Real Footer ── */}
-        <footer className="mt-24 bg-[#111111] text-[#F8F1E6] rounded-t-[48px] overflow-hidden relative shadow-2xl pt-24 sm:pt-36 flex flex-col justify-between" style={{ minHeight: '80vh' }}>
+      {/* ── 6. Real Footer ── */}
+      <footer className="mt-24 bg-[#111111] text-[#F8F1E6] overflow-hidden relative shadow-2xl pt-24 sm:pt-36 flex flex-col justify-between" style={{ minHeight: '80vh' }}>
           {/* Top section */}
           <div className="px-10 sm:px-14 lg:px-24 flex-grow relative z-10">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 lg:gap-12">
@@ -466,7 +467,6 @@ export default function DashboardPage() {
             </a>
           </div>
         </footer>
-      </main>
     </div>
   );
 }
