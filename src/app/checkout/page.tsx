@@ -20,10 +20,11 @@ const plans: Plan[] = [
   {
     id: "monthly",
     label: "Monthly Plan",
-    priceINR: 139,
+    priceINR: 199,
     period: "Month",
     features: [
       "Access to all classical dance courses",
+      "Real-time AI Dance Practice Studio",
       "HD video lessons & tutorials",
       "Interactive quizzes after modules",
       "Progress tracking dashboard"
@@ -31,25 +32,27 @@ const plans: Plan[] = [
   },
   {
     id: "yearly",
-    label: "Annual Plan",
-    priceINR: 699,
+    label: "Yearly Pro Plan",
+    priceINR: 999,
     period: "Year",
     features: [
       "Everything in Monthly",
       "Save 58% compared to monthly",
+      "Unlimited AI Pose assessments",
       "Priority certificate generation",
       "Offline lesson notes (PDF)"
     ]
   },
   {
     id: "lifetime",
-    label: "Lifetime Plan",
-    priceINR: 1999,
+    label: "Lifetime Heritage Plan",
+    priceINR: 2499,
     period: "One-time",
     features: [
       "Everything in Yearly",
-      "Lifetime access — no renewals",
-      "Gold-seal premium certificate",
+      "Lifetime access — zero renewals",
+      "Gold-seal authenticated certificate",
+      "1-on-1 virtual guru feedback session",
       "Exclusive premium community access"
     ]
   }

@@ -337,7 +337,7 @@ export default function DanceLessonPage() {
 
                 {/* Lesson Main Content Card */}
                 <div className="bg-white border border-[#E8DEC8] rounded-[28px] p-6 sm:p-8 shadow-sm space-y-6">
-                  {/* Title & Complete Toggle Button */}
+                  {/* Title & Actions Bar */}
                   <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
                     <div>
                       <span className="text-[11px] font-black uppercase tracking-widest text-[#B42318] font-mono block mb-1">
@@ -348,18 +348,29 @@ export default function DanceLessonPage() {
                       </h2>
                     </div>
 
-                    {/* [ ✓ MARK COMPLETE ] Button (Redesigned with editorial prominence) */}
-                    <button
-                      onClick={handleToggleComplete}
-                      className={`inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full text-xs font-black uppercase tracking-wider transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer shadow-md ${
-                        isCurrentCompleted
-                          ? "bg-[#111111] text-[#F8F1E6] hover:bg-[#252525]"
-                          : "bg-[#B42318] text-white hover:bg-[#C92A1E]"
-                      }`}
-                    >
-                      <Check size={16} className={isCurrentCompleted ? "text-[#B42318]" : "text-white"} />
-                      <span>{isCurrentCompleted ? "COMPLETED ✓" : "MARK COMPLETE ✓"}</span>
-                    </button>
+                    {/* Action Buttons: Practice With AI & Mark Complete */}
+                    <div className="flex flex-wrap items-center gap-2.5">
+                      <Link
+                        href={`/practice/${slug}?lesson=${selectedLesson}`}
+                        id="btn-practice-ai"
+                        className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full text-xs font-black uppercase tracking-wider bg-gradient-to-r from-[#B42318] to-[#991B1B] hover:from-[#C92A1E] hover:to-[#B42318] text-white shadow-md shadow-[#B42318]/20 transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer"
+                      >
+                        <Sparkles size={15} className="text-yellow-300 animate-pulse" />
+                        <span>Practice with Rhythm AI</span>
+                      </Link>
+
+                      <button
+                        onClick={handleToggleComplete}
+                        className={`inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full text-xs font-black uppercase tracking-wider transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer shadow-md ${
+                          isCurrentCompleted
+                            ? "bg-[#111111] text-[#F8F1E6] hover:bg-[#252525]"
+                            : "bg-[#EFE7DA] text-[#111111] hover:bg-[#E8DEC8]"
+                        }`}
+                      >
+                        <Check size={16} className={isCurrentCompleted ? "text-[#B42318]" : "text-[#111111]"} />
+                        <span>{isCurrentCompleted ? "COMPLETED ✓" : "MARK COMPLETE ✓"}</span>
+                      </button>
+                    </div>
                   </div>
 
                   {/* Description / Transcript Box */}

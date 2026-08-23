@@ -6,7 +6,7 @@ import Navbar from "@/components/Navbar";
 import { danceStyles } from "@/data/danceData";
 import Link from "next/link";
 import Image from "next/image";
-import { Play, BookOpen, Clock, ArrowRight, CheckCircle2 } from "lucide-react";
+import { Play, BookOpen, Clock, ArrowRight, CheckCircle2, Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function MyLearningPage() {
@@ -101,24 +101,35 @@ export default function MyLearningPage() {
                         </div>
                       </div>
 
-                      <Link
-                        href={isComplete ? `/certificate?dance=${course.name}` : `/dance/${course.slug}`}
-                        className={`w-full py-3.5 rounded-xl font-black uppercase tracking-wider text-xs flex items-center justify-center gap-2 transition-all active:scale-95 cursor-pointer ${
-                          isComplete 
-                            ? "bg-[#111111] text-white hover:bg-[#252525]"
-                            : "bg-[#B42318] text-white hover:bg-[#C92A1E]"
-                        }`}
-                      >
-                        {isComplete ? (
-                          <>
-                            <CheckCircle2 size={16} /> Get Certificate
-                          </>
-                        ) : (
-                          <>
-                            <Play size={14} fill="currentColor" /> Resume Course
-                          </>
-                        )}
-                      </Link>
+                      <div className="flex gap-2">
+                        <Link
+                          href={isComplete ? `/certificate?dance=${course.name}` : `/dance/${course.slug}`}
+                          className={`flex-1 py-3.5 rounded-xl font-black uppercase tracking-wider text-xs flex items-center justify-center gap-2 transition-all active:scale-95 cursor-pointer ${
+                            isComplete 
+                              ? "bg-[#111111] text-white hover:bg-[#252525]"
+                              : "bg-[#B42318] text-white hover:bg-[#C92A1E]"
+                          }`}
+                        >
+                          {isComplete ? (
+                            <>
+                              <CheckCircle2 size={16} /> Get Certificate
+                            </>
+                          ) : (
+                            <>
+                              <Play size={14} fill="currentColor" /> Resume
+                            </>
+                          )}
+                        </Link>
+
+                        <Link
+                          href={`/practice/${course.slug}`}
+                          className="px-3.5 py-3.5 bg-[#EFE7DA] hover:bg-[#E8DEC8] text-[#111111] rounded-xl font-bold uppercase tracking-wider text-xs flex items-center justify-center gap-1.5 transition-all active:scale-95 cursor-pointer"
+                          title="Practice with Rhythm AI"
+                        >
+                          <Sparkles size={14} className="text-[#B42318]" />
+                          <span className="hidden sm:inline">Rhythm AI</span>
+                        </Link>
+                      </div>
                     </div>
                   </motion.div>
                 );

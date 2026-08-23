@@ -23,11 +23,13 @@ import {
 
 export default function DashboardPage() {
   const { user, loading } = useAuth();
-  const { completedLessons, getProgress } = useProgress();
+  const { completedLessons, getProgress, getPracticeStats, practiceSessions } = useProgress();
   const router = useRouter();
 
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedRegion, setSelectedRegion] = useState<string>("all");
+
+  const practiceStats = getPracticeStats();
 
   useEffect(() => {
     if (!loading && !user) {
@@ -293,7 +295,124 @@ export default function DashboardPage() {
           </div>
         </section>
 
+        {/* ── AI Practice Performance Section ── */}
+        <section className="bg-white border border-[#E8DEC8] rounded-[32px] p-6 sm:p-8 shadow-sm space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#E8DEC8] pb-4">
+            <div>
+              <div className="flex items-center gap-2 text-xs font-bold text-[#B42318] uppercase tracking-widest font-mono">
+                <Sparkles size={14} className="text-[#B42318]" />
+                <span>RHYTHM AI COACH TELEMETRY</span>
+              </div>
+              <h3 className="text-xl sm:text-2xl font-black uppercase text-[#111111] font-mono tracking-tight mt-1">
+                Rhythm AI Performance
+              </h3>
+            </div>
 
+            <Link
+              href={`/practice/${activeDance.slug}`}
+              className="inline-flex items-center gap-2 bg-[#B42318] hover:bg-[#C92A1E] text-white px-5 py-2.5 rounded-full text-xs font-black uppercase tracking-wider transition-all duration-300 hover:scale-105 active:scale-95 shadow-md shadow-[#B42318]/20 cursor-pointer"
+            >
+              <Sparkles size={13} className="text-yellow-300" />
+              <span>Practice with Rhythm AI</span>
+            </Link>
+          </div>
+
+          {/* Performance Metric Tiles */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="bg-[#F8F1E6] border border-[#E8DEC8] rounded-2xl p-4">
+              <span className="text-[11px] font-bold font-mono text-[#777777] uppercase block mb-1">
+                Average Rhythm AI Score
+              </span>
+              <div className="flex items-baseline gap-2">
+                <span className="text-3xl font-black font-mono text-[#111111]">
+                  {practiceStats.totalSessions > 0 ? `${practiceStats.averageScore}%` : "—"}
+                </span>
+                {practiceStats.totalSessions > 0 && (
+                  <span className="text-xs font-bold text-green-600">Verified</span>
+                )}
+              </div>
+            </div>
+
+            <div className="bg-[#F8F1E6] border border-[#E8DEC8] rounded-2xl p-4">
+              <span className="text-[11px] font-bold font-mono text-[#777777] uppercase block mb-1">
+                Personal Best
+              </span>
+              <span className="text-3xl font-black font-mono text-[#B42318]">
+                {practiceStats.totalSessions > 0 ? `${practiceStats.bestScore}%` : "—"}
+              </span>
+            </div>
+
+            <div className="bg-[#F8F1E6] border border-[#E8DEC8] rounded-2xl p-4">
+              <span className="text-[11px] font-bold font-mono text-[#777777] uppercase block mb-1">
+                Rhythm AI Sessions
+              </span>
+              <span className="text-3xl font-black font-mono text-[#111111]">
+                {practiceStats.totalSessions}
+              </span>
+            </div>
+
+            <div className="bg-[#F8F1E6] border border-[#E8DEC8] rounded-2xl p-4">
+              <span className="text-[11px] font-bold font-mono text-[#777777] uppercase block mb-1">
+                Reps Perfected
+              </span>
+              <span className="text-3xl font-black font-mono text-[#111111]">
+                {practiceStats.totalReps}
+              </span>
+            </div>
+          </div>
+
+          {/* Recent Practice Sessions Feed */}
+          {practiceSessions.length > 0 ? (
+            <div className="space-y-3 pt-2">
+              <h4 className="text-xs font-black uppercase font-mono tracking-wider text-[#777777]">
+                Recent Rhythm AI History
+              </h4>
+              <div className="space-y-2">
+                {practiceSessions.slice(0, 3).map((s) => (
+                  <div
+                    key={s.id}
+                    className="flex flex-col sm:flex-row sm:items-center justify-between p-3.5 bg-[#F8F1E6] border border-[#E8DEC8] rounded-2xl gap-3 text-xs"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="w-9 h-9 rounded-xl bg-[#111111] text-white flex items-center justify-center font-black font-mono">
+                        {s.overallScore}%
+                      </div>
+                      <div>
+                        <p className="font-bold text-[#111111]">{s.movementName}</p>
+                        <p className="text-[11px] text-[#777777]">
+                          {s.danceName} · {s.durationSeconds}s · {new Date(s.createdAt).toLocaleDateString()}
+                        </p>
+                      </div>
+                    </div>
+
+                    <Link
+                      href={`/practice/${s.danceSlug}?lesson=${s.lessonIndex}`}
+                      className="text-xs font-bold text-[#B42318] hover:underline flex items-center gap-1 self-end sm:self-center"
+                    >
+                      <span>Practice Again</span>
+                      <ArrowRight size={13} />
+                    </Link>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : (
+            <div className="bg-[#F8F1E6] border border-dashed border-[#E8DEC8] rounded-2xl p-6 text-center space-y-2">
+              <p className="text-xs font-bold text-[#111111]">
+                No AI practice sessions recorded yet.
+              </p>
+              <p className="text-xs text-[#777777] max-w-md mx-auto">
+                Step in front of your camera, test your pose angles against classical reference frames, and track your form score in real time.
+              </p>
+              <Link
+                href={`/practice/${activeDance.slug}`}
+                className="inline-flex items-center gap-1 text-xs font-bold text-[#B42318] hover:underline pt-1"
+              >
+                <span>Try First Practice Drill →</span>
+              </Link>
+            </div>
+          )}
+        </section>
 
         {/* ── 4. Classical Dance Forms Section & Filter Tabs ── */}
         <section id="classical-forms" className="space-y-6 pt-4">
